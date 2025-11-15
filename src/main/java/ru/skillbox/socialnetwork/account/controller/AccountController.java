@@ -7,6 +7,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.socialnetwork.account.dto.AccountDTO;
+import ru.skillbox.socialnetwork.account.dto.AccountSearchRequest;
 import ru.skillbox.socialnetwork.account.service.AccountService;
 
 import java.util.List;
@@ -29,6 +30,15 @@ public class AccountController {
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(findingAccount);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<AccountDTO>> searchAccounts(
+            AccountSearchRequest request,
+            @PageableDefault(sort = "id", direction = Sort.Direction.ASC)
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(accountService.getAccountsByParams(request, pageable));
     }
 
     @GetMapping("/accountIds")
