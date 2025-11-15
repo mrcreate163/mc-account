@@ -1,4 +1,4 @@
-package org.leska.mcacc;
+package ru.skillbox.socialnetwork.account;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
