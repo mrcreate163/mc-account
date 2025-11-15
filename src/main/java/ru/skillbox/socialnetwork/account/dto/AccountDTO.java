@@ -23,9 +23,9 @@ public class AccountDTO {
     private LocalDateTime registrationDate;
     private LocalDate birthDate;
     private LocalDateTime lastOnlineTime;
-    private Boolean isOnline;
-    private Boolean isBlocked;
-    private Boolean isDeleted;
+    private boolean isOnline;
+    private boolean isBlocked;
+    private boolean isDeleted;
     private String photoName;
     private LocalDateTime createdOn;
     private LocalDateTime updatedOn;
