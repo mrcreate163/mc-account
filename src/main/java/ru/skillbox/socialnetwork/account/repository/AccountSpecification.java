@@ -2,14 +2,14 @@ package ru.skillbox.socialnetwork.account.repository;
 
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
-import ru.skillbox.socialnetwork.account.dto.AccountSearchRequest;
+import ru.skillbox.socialnetwork.account.dto.AccountByFilterDTO;
 import ru.skillbox.socialnetwork.account.model.Account;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AccountSpecification {
-    public static Specification<Account> byRequest(AccountSearchRequest req) {
+    public static Specification<Account> byRequest(AccountByFilterDTO req) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 

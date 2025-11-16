@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-public class AccountSearchRequest {
+public class AccountByFilterDTO {
     private List<UUID> ids;
     private String author;
     private String firstName;
