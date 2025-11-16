@@ -1,1 +1,18 @@
-spring.application.name=mc-acc
+spring:
+  application:
+    name: mc-acc
+
+  profiles:
+    active: DEV
+
+  datasource:
+    url: fix
+    username: fix
+    password: fix
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: true
+
+  liquibase:
+    enabled: false
