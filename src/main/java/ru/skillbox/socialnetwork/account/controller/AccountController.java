@@ -7,7 +7,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.socialnetwork.account.dto.AccountDTO;
-import ru.skillbox.socialnetwork.account.dto.AccountSearchRequest;
+import ru.skillbox.socialnetwork.account.dto.AccountByFilterDTO;
 import ru.skillbox.socialnetwork.account.service.AccountService;
 
 import java.util.List;
@@ -23,22 +23,37 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    @PostMapping
+    public ResponseEntity<AccountDTO> createAccount(@RequestBody AccountDTO dto) {
+        return ResponseEntity.ok(accountService.createAccount(dto));
+    }
+
+    @PostMapping("/searchByFilter")
+    public ResponseEntity<Page<AccountDTO>> searchAccountsByFilter(
+            @RequestBody AccountByFilterDTO filterDTO,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(accountService.searchAccounts(filterDTO, pageable));
+    }
+
+    @PostMapping("/find")
+    public ResponseEntity<List<AccountDTO>> findAccountsByIds(@RequestBody List<UUID> ids) {
+        return ResponseEntity.ok(accountService.getAccountByIds(ids));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getAccountById(@PathVariable UUID id) {
-        AccountDTO findingAccount = accountService.findAccountById(id);
-        if (findingAccount == null)
-            return ResponseEntity.notFound().build();
-
+        AccountDTO findingAccount = accountService.getAccountById(id);
         return ResponseEntity.ok(findingAccount);
     }
 
     @GetMapping("/search")
     public ResponseEntity<Page<AccountDTO>> searchAccounts(
-            AccountSearchRequest request,
+            AccountByFilterDTO request,
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC)
             Pageable pageable
     ) {
-        return ResponseEntity.ok(accountService.getAccountsByParams(request, pageable));
+        return ResponseEntity.ok(accountService.searchAccounts(request, pageable));
     }
 
     @GetMapping("/accountIds")
@@ -47,7 +62,7 @@ public class AccountController {
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC)
             Pageable pageable
     ) {
-        return ResponseEntity.ok(accountService.getAccountsByIds(ids, pageable));
+        return ResponseEntity.ok(accountService.findAllAccountByIds(ids, pageable));
     }
 
 }
