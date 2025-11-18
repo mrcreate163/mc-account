@@ -19,15 +19,14 @@ import java.util.UUID;
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", unique = true, nullable = false)
     private UUID id;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "phone", unique = true)
-    private String phoneNumber;
+    private String phone;
 
     @Column(name = "photo")
     private String photo;
@@ -48,7 +47,7 @@ public class Account {
     private String lastName;
 
     @Column(name = "reg_date")
-    private LocalDateTime registrationDate;
+    private LocalDateTime regDate;
 
     @Column(name = "bd")
     private LocalDate birthDate;

@@ -13,14 +13,14 @@ import java.util.UUID;
 public class AccountDTO {
     private UUID id;
     private String email;
-    private String phoneNumber;
+    private String phone;
     private String photo;
     private String about;
     private String city;
     private String country;
     private String firstName;
     private String lastName;
-    private LocalDateTime registrationDate;
+    private LocalDateTime regDate;
     private LocalDate birthDate;
     private LocalDateTime lastOnlineTime;
     private boolean isOnline;
