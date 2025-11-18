@@ -1,5 +1,7 @@
 package ru.skillbox.socialnetwork.account.service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,19 +21,34 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
+    private final EntityManager entityManager;
 
     public AccountServiceImpl(
             AccountRepository accountRepository,
-            AccountMapper accountMapper
+            AccountMapper accountMapper,
+            EntityManager entityManager
     ) {
         this.accountRepository = accountRepository;
         this.accountMapper = accountMapper;
+        this.entityManager = entityManager;
     }
 
     @Override
+    public Page<AccountDTO> getAllAccounts(Pageable pageable) {
+        return accountRepository.findAll(pageable)
+                .map(accountMapper::toDto);
+    }
+
+    @Override
+    @Transactional
     public AccountDTO createAccount(AccountDTO dto) {
         Account account = accountMapper.toEntity(dto);
-        return accountMapper.toDto(accountRepository.save(account));
+
+        if (accountRepository.existsById(account.getId()))
+            return null;
+
+        entityManager.persist(account);
+        return accountMapper.toDto(account);
     }
 
     @Override
@@ -47,7 +64,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Page<AccountDTO> findAllAccountByIds(List<UUID> ids, Pageable pageable) {
+    public Page<AccountDTO> getAllAccountByIds(List<UUID> ids, Pageable pageable) {
         return accountRepository.findAllByIdIn(ids, pageable)
                 .map(accountMapper::toDto);
     }

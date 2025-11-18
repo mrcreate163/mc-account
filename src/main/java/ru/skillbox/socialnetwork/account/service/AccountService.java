@@ -11,7 +11,8 @@ import java.util.UUID;
 public interface AccountService {
     List<AccountDTO> getAccountByIds(List<UUID> ids);
     AccountDTO getAccountById(UUID id);
-    Page<AccountDTO> findAllAccountByIds(List<UUID> ids, Pageable pageable);
+    Page<AccountDTO> getAllAccountByIds(List<UUID> ids, Pageable pageable);
     Page<AccountDTO> searchAccounts(AccountByFilterDTO request, Pageable pageable);
     AccountDTO createAccount(AccountDTO dto);
+    Page<AccountDTO> getAllAccounts(Pageable pageable);
 }

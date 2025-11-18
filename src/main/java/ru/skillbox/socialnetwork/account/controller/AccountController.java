@@ -11,6 +11,7 @@ import ru.skillbox.socialnetwork.account.dto.AccountByFilterDTO;
 import ru.skillbox.socialnetwork.account.service.AccountService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -23,9 +24,23 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    @GetMapping
+    public ResponseEntity<?> getAllAccounts(
+            @PageableDefault(sort = "id", direction = Sort.Direction.ASC)
+            Pageable pageable
+    ) {
+        Page<AccountDTO> accountDTO = accountService.getAllAccounts(pageable);
+        return ResponseEntity.ok(accountDTO);
+    }
+
     @PostMapping
-    public ResponseEntity<AccountDTO> createAccount(@RequestBody AccountDTO dto) {
-        return ResponseEntity.ok(accountService.createAccount(dto));
+    public ResponseEntity<?> createAccount(@RequestBody AccountDTO dto) {
+        AccountDTO accountDTO = accountService.createAccount(dto);
+        if (accountDTO == null)
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "Аккаунт с id: " + dto.getId() + " уже существует"));
+
+        return ResponseEntity.ok(accountDTO);
     }
 
     @PostMapping("/searchByFilter")
@@ -62,7 +77,7 @@ public class AccountController {
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC)
             Pageable pageable
     ) {
-        return ResponseEntity.ok(accountService.findAllAccountByIds(ids, pageable));
+        return ResponseEntity.ok(accountService.getAllAccountByIds(ids, pageable));
     }
 
 }
