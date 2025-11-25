@@ -5,9 +5,9 @@ spring:
     active: DEV
 
   datasource:
-    url: fix
-    username: fix
-    password: fix
+    url: jdbc:postgresql://localhost:5432/account
+    username: postgres
+    password: postgres
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -18,6 +18,6 @@ spring:
     change-log: classpath:/db.changelog/db.changelog-master.xml
 
 server:
-  port: 8081
+  port: 8080
 
 ---

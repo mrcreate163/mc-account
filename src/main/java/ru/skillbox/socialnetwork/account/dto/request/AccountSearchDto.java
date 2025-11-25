@@ -1,16 +1,22 @@
-package ru.skillbox.socialnetwork.account.dto;
+package ru.skillbox.socialnetwork.account.dto.request;
 
-import lombok.Data;
+import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@Data
-public class AccountByFilterDTO {
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class AccountSearchDto {
     private List<UUID> ids;
     private String author;
     private String firstName;
     private String lastName;
+    private LocalDateTime birthDateFrom;
+    private LocalDateTime birthDateTo;
     private String city;
     private String country;
     private Boolean isBlocked;

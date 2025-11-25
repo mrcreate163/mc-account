@@ -9,7 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.socialnetwork.account.dto.AccountDto;
-import ru.skillbox.socialnetwork.account.dto.AccountByFilterDTO;
+import ru.skillbox.socialnetwork.account.dto.request.AccountByFilterDto;
+import ru.skillbox.socialnetwork.account.dto.request.AccountSearchDto;
 import ru.skillbox.socialnetwork.account.service.AccountService;
 
 import java.util.List;
@@ -22,6 +23,22 @@ import java.util.UUID;
 public class AccountController {
 
     private final AccountService accountService;
+
+    @GetMapping("/me")
+    public ResponseEntity<AccountDto> getCurrentAccount(@RequestHeader("X-User-Id") UUID userId) {
+        AccountDto accountDto = accountService.getAccountById(userId);
+        return ResponseEntity.ok(accountDto);
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<AccountDto> editCurrentAccount(@RequestBody AccountDto dto) {
+        return ResponseEntity.ok(accountService.updateAccount(dto));
+    }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<String> deleteCurrentAccount(@RequestHeader("X-User-Id") UUID userId) {
+        return ResponseEntity.ok(accountService.deleteAccount(userId));
+    }
 
     @PutMapping("/block/{id}")
     public ResponseEntity<?> blockAccountById(@PathVariable UUID id) {
@@ -63,11 +80,8 @@ public class AccountController {
     }
 
     @PostMapping("/searchByFilter")
-    public ResponseEntity<Page<AccountDto>> searchAccountsByFilter(
-            @RequestBody AccountByFilterDTO filterDTO,
-            Pageable pageable
-    ) {
-        return ResponseEntity.ok(accountService.searchAccounts(filterDTO, pageable));
+    public ResponseEntity<Page<AccountDto>> searchAccountsByFilter(@RequestBody AccountByFilterDto filterDTO) {
+        return ResponseEntity.ok(accountService.searchAccountsByFilter(filterDTO));
     }
 
     @PostMapping("/find")
@@ -83,11 +97,11 @@ public class AccountController {
 
     @GetMapping("/search")
     public ResponseEntity<Page<AccountDto>> searchAccounts(
-            AccountByFilterDTO request,
+            AccountSearchDto request,
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC)
             Pageable pageable
     ) {
-        return ResponseEntity.ok(accountService.searchAccounts(request, pageable));
+        return ResponseEntity.ok(accountService.searchAccountsByFilter(request, pageable));
     }
 
     @GetMapping("/accountIds")
