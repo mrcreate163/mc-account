@@ -2,6 +2,8 @@ package ru.skillbox.socialnetwork.account.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import ru.skillbox.socialnetwork.account.client.auth.UserDataDetails;
+import ru.skillbox.socialnetwork.account.dto.request.CreatedAccountRequest;
 import ru.skillbox.socialnetwork.account.dto.response.AccountDto;
 import ru.skillbox.socialnetwork.account.dto.request.AccountByFilterDto;
 import ru.skillbox.socialnetwork.account.dto.request.AccountSearchDto;
@@ -17,7 +19,7 @@ public interface AccountService {
     Page<AccountDto> getAllAccountByIds(List<UUID> ids, Pageable pageable);
     Page<AccountDto> searchAccountsByFilter(AccountByFilterDto request);
     Page<AccountDto> searchAccountsByFilter(AccountSearchDto request, Pageable pageable);
-    AccountDto createAccount(AccountDto dto);
+    AccountDto createAccount(CreatedAccountRequest dto, UserDataDetails user);
     Page<AccountDto> getAllAccounts(Pageable pageable);
     boolean blockedAccountById(UUID id);
     boolean unblockAccount(UUID id);

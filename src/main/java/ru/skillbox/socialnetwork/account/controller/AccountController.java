@@ -10,14 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.socialnetwork.account.client.auth.UserDataDetails;
-import ru.skillbox.socialnetwork.account.dto.response.AccountDto;
 import ru.skillbox.socialnetwork.account.dto.request.AccountByFilterDto;
 import ru.skillbox.socialnetwork.account.dto.request.AccountSearchDto;
 import ru.skillbox.socialnetwork.account.dto.request.CreatedAccountRequest;
+import ru.skillbox.socialnetwork.account.dto.response.AccountDto;
 import ru.skillbox.socialnetwork.account.service.AccountService;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -77,12 +76,7 @@ public class AccountController {
             @AuthenticationPrincipal UserDataDetails user,
             @RequestBody CreatedAccountRequest dto
     ) {
-        AccountDto accountDTO = accountService.createAccount(dto);
-
-        if (accountDTO == null)
-            return ResponseEntity.badRequest()
-                    .body(Map.of("message", "Аккаунт с id: " + dto.getId() + " уже существует"));
-
+        AccountDto accountDTO = accountService.createAccount(dto, user);
         return ResponseEntity.ok(accountDTO);
     }
 

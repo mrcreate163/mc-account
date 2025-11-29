@@ -1,6 +1,5 @@
 package ru.skillbox.socialnetwork.account.service;
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -8,9 +7,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import ru.skillbox.socialnetwork.account.dto.response.AccountDto;
+import ru.skillbox.socialnetwork.account.client.auth.UserDataDetails;
 import ru.skillbox.socialnetwork.account.dto.request.AccountByFilterDto;
 import ru.skillbox.socialnetwork.account.dto.request.AccountSearchDto;
+import ru.skillbox.socialnetwork.account.dto.request.CreatedAccountRequest;
+import ru.skillbox.socialnetwork.account.dto.response.AccountDto;
 import ru.skillbox.socialnetwork.account.exception.AccountNotFoundException;
 import ru.skillbox.socialnetwork.account.mapper.AccountMapper;
 import ru.skillbox.socialnetwork.account.model.Account;
@@ -26,7 +27,6 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
-    private final EntityManager entityManager;
 
     @Override
     public AccountDto updateAccount(AccountDto dto) {
@@ -82,13 +82,15 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public AccountDto createAccount(AccountDto dto) {
+    public AccountDto createAccount(CreatedAccountRequest dto, UserDataDetails user) {
         Account account = accountMapper.toEntity(dto);
+        account.setId(user.getUserId());
+        account.setEmail(user.getEmail());
 
-        if (accountRepository.existsById(account.getId()))
-            return null;
+        if (accountRepository.existsById(user.getUserId()))
+            throw new AccountNotFoundException("Аккаунт не найден!");
 
-        entityManager.persist(account);
+        accountRepository.save(account);
         return accountMapper.toDto(account);
     }
 

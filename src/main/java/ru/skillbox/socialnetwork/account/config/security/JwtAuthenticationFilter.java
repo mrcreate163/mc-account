@@ -1,5 +1,7 @@
 package ru.skillbox.socialnetwork.account.config.security;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,9 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ import ru.skillbox.socialnetwork.account.client.auth.AuthClient;
 import ru.skillbox.socialnetwork.account.client.auth.dto.UserDto;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.UUID;
 
 @Component
 @Slf4j
@@ -46,13 +46,15 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
         String token = header.replace("Bearer ", "");
 
-        UserDto user = authClient.getUserByToken(token);
+        boolean isValid = authClient.checkValidateToken(token);
 
-        if (user == null) {
-            log.warn("Пользователь отсутствует");
+        if (!isValid) {
+            log.warn("Токен не валиден!");
             res.setStatus(HttpStatus.UNAUTHORIZED.value());
             return;
         }
+
+        UserDto user = extractUserFromToken(token);
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 user,
@@ -62,5 +64,12 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(req, res);
+    }
+
+    private UserDto extractUserFromToken(String token) {
+        DecodedJWT decode = JWT.decode(token);
+        UUID userId = decode.getClaim("userId").as(UUID.class);
+        String email = decode.getClaim("email").asString();
+        return new UserDto(userId, email);
     }
 }
