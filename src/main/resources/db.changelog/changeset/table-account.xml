@@ -1,0 +1,33 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1763313348123-1" author="Aleksei">
+        <createTable tableName="account">
+            <column name="id" type="UUID">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="email" type="varchar(50)">
+                <constraints unique="true"/>
+            </column>
+            <column name="phone" type="varchar(15)">
+                <constraints unique="true"/>
+            </column>
+            <column name="photo" type="text"/>
+            <column name="about" type="text"/>
+            <column name="city" type="varchar(50)"/>
+            <column name="country" type="varchar(50)"/>
+            <column name="first_name" type="varchar(100)"/>
+            <column name="last_name" type="varchar(100)"/>
+            <column name="reg_date" type="timestamp"/>
+            <column name="bd" type="date"/>
+            <column name="last_online_time" type="timestamp"/>
+            <column name="is_online" type="boolean"/>
+            <column name="is_blocked" type="boolean"/>
+            <column name="is_deleted" type="boolean"/>
+            <column name="photo_name" type="text"/>
+            <column name="created_on" type="timestamp"/>
+            <column name="updated_on" type="timestamp"/>
+            <column name="emoji_status" type="varchar(256)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

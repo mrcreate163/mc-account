@@ -1,4 +1,4 @@
-package org.leska.mcacc;
+package ru.skillbox.socialnetwork.account;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
