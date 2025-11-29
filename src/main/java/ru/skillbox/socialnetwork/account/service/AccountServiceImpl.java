@@ -8,7 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import ru.skillbox.socialnetwork.account.dto.AccountDto;
+import ru.skillbox.socialnetwork.account.dto.response.AccountDto;
 import ru.skillbox.socialnetwork.account.dto.request.AccountByFilterDto;
 import ru.skillbox.socialnetwork.account.dto.request.AccountSearchDto;
 import ru.skillbox.socialnetwork.account.exception.AccountNotFoundException;

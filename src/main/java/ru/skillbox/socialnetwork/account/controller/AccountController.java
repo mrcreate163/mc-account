@@ -7,10 +7,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import ru.skillbox.socialnetwork.account.dto.AccountDto;
+import ru.skillbox.socialnetwork.account.client.auth.UserDataDetails;
+import ru.skillbox.socialnetwork.account.dto.response.AccountDto;
 import ru.skillbox.socialnetwork.account.dto.request.AccountByFilterDto;
 import ru.skillbox.socialnetwork.account.dto.request.AccountSearchDto;
+import ru.skillbox.socialnetwork.account.dto.request.CreatedAccountRequest;
 import ru.skillbox.socialnetwork.account.service.AccountService;
 
 import java.util.List;
@@ -25,8 +28,8 @@ public class AccountController {
     private final AccountService accountService;
 
     @GetMapping("/me")
-    public ResponseEntity<AccountDto> getCurrentAccount(@RequestHeader("X-User-Id") UUID userId) {
-        AccountDto accountDto = accountService.getAccountById(userId);
+    public ResponseEntity<AccountDto> getCurrentAccount(@AuthenticationPrincipal UserDataDetails user) {
+        AccountDto accountDto = accountService.getAccountById(user.getUserId());
         return ResponseEntity.ok(accountDto);
     }
 
@@ -36,8 +39,8 @@ public class AccountController {
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<String> deleteCurrentAccount(@RequestHeader("X-User-Id") UUID userId) {
-        return ResponseEntity.ok(accountService.deleteAccount(userId));
+    public ResponseEntity<String> deleteCurrentAccount(@AuthenticationPrincipal UserDataDetails user) {
+        return ResponseEntity.ok(accountService.deleteAccount(user.getUserId()));
     }
 
     @PutMapping("/block/{id}")
@@ -70,8 +73,12 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createAccount(@RequestBody AccountDto dto) {
+    public ResponseEntity<?> createAccount(
+            @AuthenticationPrincipal UserDataDetails user,
+            @RequestBody CreatedAccountRequest dto
+    ) {
         AccountDto accountDTO = accountService.createAccount(dto);
+
         if (accountDTO == null)
             return ResponseEntity.badRequest()
                     .body(Map.of("message", "Аккаунт с id: " + dto.getId() + " уже существует"));

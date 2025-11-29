@@ -1,7 +1,7 @@
 package ru.skillbox.socialnetwork.account.mapper;
 
 import org.mapstruct.Mapper;
-import ru.skillbox.socialnetwork.account.dto.AccountDto;
+import ru.skillbox.socialnetwork.account.dto.response.AccountDto;
 import ru.skillbox.socialnetwork.account.model.Account;
 
 import java.util.List;

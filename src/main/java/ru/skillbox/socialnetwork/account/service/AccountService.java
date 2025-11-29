@@ -2,7 +2,7 @@ package ru.skillbox.socialnetwork.account.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import ru.skillbox.socialnetwork.account.dto.AccountDto;
+import ru.skillbox.socialnetwork.account.dto.response.AccountDto;
 import ru.skillbox.socialnetwork.account.dto.request.AccountByFilterDto;
 import ru.skillbox.socialnetwork.account.dto.request.AccountSearchDto;
 
