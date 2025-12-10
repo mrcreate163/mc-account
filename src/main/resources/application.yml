@@ -1,6 +1,9 @@
 spring:
   application:
     name: mc-acc
+
+---
+spring:
   profiles:
     active: DEV
 
@@ -12,12 +15,43 @@ spring:
 
   jpa:
     show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
 
   liquibase:
     enabled: true
     change-log: classpath:/db.changelog/db.changelog-master.xml
 
-server:
-  port: 8080
+  kafka:
+    bootstrap-server: "localhost:9092"
+    group-id: "dsf"
 
+server:
+  port: 34135
+
+client:
+  default-host: "http://localhost"
+  auth: "${client.default-host}:8080"
+
+logging:
+  level:
+    org:
+      springframework:
+        cache: TRACE #логирование доступа к кешу
+        transaction:
+        #interceptor: trace
+      hibernate:
+        engine:
+          transaction:
+            internal:
+              org.hibernate.engine.transaction.internal.TransactionImpl: debug
+        SQL: trace #show sql in console
+        type:
+          descriptor:
+            sql:
+              BasicBinder: trace # see values
+    root: info
 ---

@@ -1,24 +1,14 @@
 stages:
   - build
-  - test
   - deploy
 
 build-job:
   stage: build
   script:
-    - echo "Compiling the code..."
-    - echo "Compile complete."
-
-test-job:
-  stage: test
-  script:
-    - echo "Running unit tests... This will take about 60 seconds."
-    - sleep 60
-    - echo "Code coverage is 90%"
+    - docker build -t mc-account .
 
 deploy-job:
   stage: deploy
   environment: production
   script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
+    - docker start mc-account -d
