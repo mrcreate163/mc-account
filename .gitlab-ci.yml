@@ -4,11 +4,13 @@ stages:
 
 build-job:
   stage: build
+  image: docker:latest
   script:
     - docker build -t mc-account .
 
 deploy-job:
   stage: deploy
   environment: production
+  image: docker:latest
   script:
     - docker start mc-account -d
