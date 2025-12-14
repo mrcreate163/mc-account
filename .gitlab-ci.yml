@@ -89,12 +89,12 @@ prod-deploy:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     # Добавляем сервер в known_hosts
-    - ssh-keyscan -H $PROD_SERVER_HOST >> ~/.ssh/known_hosts 2>/dev/null
+    - ssh-keyscan -H $DEV_SERVER_HOST >> ~/.ssh/known_hosts 2>/dev/null
     - export DEPLOY_IMAGE="$DOCKER_HUB_USER/mc-account:$CI_COMMIT_SHORT_SHA"
   script:
     - echo "🚀 Деплой в PRODUCTION"
     - |
-      ssh $PROD_SERVER_USER@$PROD_SERVER_HOST << ENDSSH
+      ssh $DEV_SERVER_USER@$DEV_SERVER_HOST << ENDSSH
         set -e
 
         docker pull $DEPLOY_IMAGE
