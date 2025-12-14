@@ -67,7 +67,7 @@ dev-deploy:
     - test-job
     - docker-build
   rules:
-    - if $CI_COMMIT_BRANCH == "dev"
+    - if: $CI_COMMIT_BRANCH == "dev"
 
 prod-deploy:
   stage: deploy
