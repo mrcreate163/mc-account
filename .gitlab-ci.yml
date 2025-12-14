@@ -92,7 +92,7 @@ prod-deploy:
     - ssh-keyscan -H $PROD_SERVER_HOST >> ~/.ssh/known_hosts 2>/dev/null
     - export DEPLOY_IMAGE="$DOCKER_HUB_USER/mc-account:$CI_COMMIT_SHORT_SHA"
   script:
-    - echo "🚀 Deploy image: $DEPLOY_IMAGE"
+    - echo "🚀 Деплой в PRODUCTION"
     - |
       ssh $PROD_SERVER_USER@$PROD_SERVER_HOST << ENDSSH
         set -e
