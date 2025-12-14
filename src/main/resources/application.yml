@@ -1,6 +1,9 @@
 spring:
   application:
-    name: mc-acc
+    name: mc-account
+
+server:
+  port: 34135
 
 ---
 spring:
@@ -8,7 +11,7 @@ spring:
     active: PROD
 
   datasource:
-    url: jdbc:postgresql://postgres:5432/account
+    url: jdbc:postgresql://social-network-postgres:5432/account
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -29,11 +32,18 @@ spring:
     bootstrap-server: "kafka:9092"
     group-id: "dsf"
 
-server:
-  port: 34135
-
 client:
   auth: "http://mc-auth:8081"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://89.111.153.92:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
 
 logging:
   level:
