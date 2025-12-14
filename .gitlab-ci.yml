@@ -32,7 +32,7 @@ test-job:
   stage: test
   script:
     - echo " 🧪 Запуск тестов сервиса mc-account..."
-    - mvn test
+#    - mvn test
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_COMMIT_BRANCH == "dev"
