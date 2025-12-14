@@ -1,16 +1,125 @@
 stages:
   - build
+  - test
+  - package
   - deploy
 
-build-job:
-  stage: build
-  image: docker:latest
-  script:
-    - docker build -t mc-account .
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
 
-deploy-job:
-  stage: deploy
-  environment: production
-  image: docker:latest
+cache:
+  key: "${CI_COMMIT_REF_SLUG}"
+  paths:
+    - ".m2/repository"
+
+.maven-job:
+  image: maven:3.9.6-eclipse-temurin-21
+
+# ------------------------ BUILD job'а
+build-job:
+  extends: .maven-job
+  stage: build
   script:
-    - docker start mc-account -d
+    - echo " 🔨 Компиляция сервиса mc-account..."
+    - mvn clean compile -DskipTests
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == "dev"
+
+# ------------------------ TEST job'а
+test-job:
+  extends: .maven-job
+  stage: test
+  script:
+    - echo " 🧪 Запуск тестов сервиса mc-account..."
+    - mvn test
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == "dev"
+
+# ------------------------ PACKAGE job'а
+docker-build:
+  stage: package
+  image: docker:24
+  variables:
+    DOCKER_HOST: unix:///var/run/docker.sock
+  before_script:
+    - echo "🔐 Логин в GitLab Container Registry"
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - echo "🐳 Сборка Docker-образа"
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA -t $CI_REGISTRY_IMAGE:latest .
+    - echo "📤 Push образа в GitLab Registry"
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+    - docker push $CI_REGISTRY_IMAGE:latest
+  needs:
+    - test-job
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == "dev"
+
+# ------------------------ DEPLOY job'а
+dev-deploy:
+  stage: deploy
+  script:
+    - echo " 🚀 Деплой на DEV сервер..."
+  needs:
+    - test-job
+    - docker-build
+  rules:
+    - if $CI_COMMIT_BRANCH == "dev"
+
+prod-deploy:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    # Устанавливаем SSH-клиент
+    - apk add --no-cache openssh-client
+
+    # Запускаем ssh-agent
+    - eval $(ssh-agent -s)
+
+    # Добавляем приватный ключ из CI variables
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+
+    # Готовим SSH окружение
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+
+    # Добавляем сервер в known_hosts
+    - ssh-keyscan -H $PROD_SERVER_HOST >> ~/.ssh/known_hosts 2>/dev/null
+
+    # Формируем имя Docker-образа из GitLab Registry
+    - export DEPLOY_IMAGE="$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+
+  script:
+    - echo "🚀 Деплой в PRODUCTION"
+    - |
+      ssh $PROD_SERVER_USER@$PROD_SERVER_HOST << 'ENDSSH'
+        set -e
+
+        echo "📥 Pull image"
+        docker pull $DEPLOY_IMAGE
+
+        echo "🛑 Stop old container"
+        docker stop mc-account || true
+        docker rm mc-account || true
+
+        echo "🚀 Start new container"
+        docker run -d \
+          --name mc-account \
+          --restart always \
+          --network social-network-net \
+          -p 34135:34135 \
+          -e SPRING_PROFILES_ACTIVE=prod \
+          $DEPLOY_IMAGE
+
+        echo "🧹 Cleanup unused images"
+        docker image prune -f
+
+      ENDSSH
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  needs:
+    - docker-build
+    - test-job
