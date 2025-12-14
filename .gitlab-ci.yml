@@ -81,37 +81,27 @@ prod-deploy:
   before_script:
     # Устанавливаем SSH-клиент
     - apk add --no-cache openssh-client
-
     # Запускаем ssh-agent
     - eval $(ssh-agent -s)
-
     # Добавляем приватный ключ из CI variables
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-
     # Готовим SSH окружение
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-
     # Добавляем сервер в known_hosts
     - ssh-keyscan -H $PROD_SERVER_HOST >> ~/.ssh/known_hosts 2>/dev/null
-
-    # Формируем имя Docker-образа из GitLab Registry
-    - export DEPLOY_IMAGE="$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
-
+    - export DEPLOY_IMAGE="$DOCKER_HUB_USER/mc-account:$CI_COMMIT_SHORT_SHA"
   script:
-    - echo "🚀 Деплой в PRODUCTION"
+    - echo "🚀 Deploy image: $DEPLOY_IMAGE"
     - |
-      ssh $PROD_SERVER_USER@$PROD_SERVER_HOST << 'ENDSSH'
+      ssh $PROD_SERVER_USER@$PROD_SERVER_HOST << ENDSSH
         set -e
 
-        echo "📥 Pull image"
         docker pull $DEPLOY_IMAGE
 
-        echo "🛑 Stop old container"
         docker stop mc-account || true
         docker rm mc-account || true
 
-        echo "🚀 Start new container"
         docker run -d \
           --name mc-account \
           --restart always \
@@ -120,9 +110,7 @@ prod-deploy:
           -e SPRING_PROFILES_ACTIVE=prod \
           $DEPLOY_IMAGE
 
-        echo "🧹 Cleanup unused images"
         docker image prune -f
-
       ENDSSH
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

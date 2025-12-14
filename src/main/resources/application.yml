@@ -5,7 +5,7 @@ spring:
 ---
 spring:
   profiles:
-    active: DEV
+    active: PROD
 
   datasource:
     url: jdbc:postgresql://postgres:5432/account
