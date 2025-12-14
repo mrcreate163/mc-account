@@ -45,8 +45,11 @@ docker-build:
     DOCKER_HOST: unix:///var/run/docker.sock
   before_script:
     - echo "🔐 Логин в GitLab Container Registry"
+    -
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
+    - echo "CI_REGISTRY=$CI_REGISTRY"
+    - echo "CI_REGISTRY_IMAGE=$CI_REGISTRY_IMAGE"
     - echo "🐳 Сборка Docker-образа"
     - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA -t $CI_REGISTRY_IMAGE:latest .
     - echo "📤 Push образа в GitLab Registry"
