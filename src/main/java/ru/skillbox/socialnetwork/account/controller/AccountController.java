@@ -42,6 +42,11 @@ public class AccountController {
         return ResponseEntity.ok(accountService.deleteAccount(user.getUserId()));
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     @PutMapping("/block/{id}")
     public ResponseEntity<?> blockAccountById(@PathVariable UUID id) {
         boolean isBlocked = accountService.blockedAccountById(id);
