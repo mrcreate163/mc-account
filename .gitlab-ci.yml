@@ -111,8 +111,11 @@ prod-deploy:
           $DEPLOY_IMAGE
       
         echo "🧹 Cleanup old images"
-        docker images $DOCKER_HUB_USER/mc-account --format "{{.ID}}" \
+        docker images mlz777/mc-account --format "{{.Repository}}:{{.Tag}} {{.CreatedAt}}" \
+          | grep -v "<none>" \
+          | sort -rk2 \
           | tail -n +5 \
+          | awk '{print $1}' \
           | xargs -r docker rmi
 
         docker image prune -f
