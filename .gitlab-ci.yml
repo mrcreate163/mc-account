@@ -109,6 +109,11 @@ prod-deploy:
           -p 34135:34135 \
           -e SPRING_PROFILES_ACTIVE=prod \
           $DEPLOY_IMAGE
+      
+        echo "🧹 Cleanup old images"
+        docker images $DOCKER_HUB_USER/mc-account --format "{{.ID}}" \
+          | tail -n +5 \
+          | xargs -r docker rmi
 
         docker image prune -f
       ENDSSH
