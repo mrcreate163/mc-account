@@ -6,16 +6,21 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import ru.skillbox.socialnetwork.account.client.auth.dto.UserDto;
 
-@Component
 @Slf4j
+@Component
 public class AuthClient {
-    @Value("${client.auth}")
-    private String authUrl;
 
     private static final String VALIDATE_URI = "/validate";
     private static final String USER_URI = "/user";
 
-    private final RestClient restClient = RestClient.create(authUrl);
+    private final RestClient restClient;
+
+    public AuthClient(
+            @Value("${client.auth}") String authUrl,
+            RestClient.Builder restClient
+    ) {
+        this.restClient = restClient.baseUrl(authUrl).build();
+    }
 
     public Boolean checkValidateToken(String token) {
         try {
