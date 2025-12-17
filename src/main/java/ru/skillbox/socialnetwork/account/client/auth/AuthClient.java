@@ -24,8 +24,10 @@ public class AuthClient {
 
     public Boolean checkValidateToken(String token) {
         try {
+            String validateUrl = VALIDATE_URI + "?token=" + token;
+            log.info(validateUrl);
             return restClient.get()
-                    .uri(VALIDATE_URI)
+                    .uri(validateUrl)
                     .headers(it -> it.setBearerAuth(token))
                     .retrieve()
                     .toEntity(Boolean.class)
