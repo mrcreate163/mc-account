@@ -30,7 +30,6 @@ public class AuthClient {
             log.info("{}{}", authUrl, validateUrl);
             return restClient.get()
                     .uri(validateUrl)
-                    .headers(it -> it.setBearerAuth(token))
                     .retrieve()
                     .toEntity(Boolean.class)
                     .getBody();
