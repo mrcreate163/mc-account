@@ -10,7 +10,7 @@ import ru.skillbox.socialnetwork.account.client.auth.dto.UserDto;
 @Component
 public class AuthClient {
 
-    private static final String VALIDATE_URI = "/validate?token=";
+    private static final String VALIDATE_URI = "/api/v1/auth/validate?token=";
     private static final String USER_URI = "/user";
 
     private final RestClient restClient;
