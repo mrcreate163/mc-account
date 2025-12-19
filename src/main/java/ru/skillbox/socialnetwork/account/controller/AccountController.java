@@ -1,6 +1,7 @@
 package ru.skillbox.socialnetwork.account.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,6 +20,7 @@ import ru.skillbox.socialnetwork.account.service.AccountService;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/account")
 @RequiredArgsConstructor
@@ -28,7 +30,10 @@ public class AccountController {
 
     @GetMapping("/me")
     public ResponseEntity<AccountDto> getCurrentAccount(@AuthenticationPrincipal UserDataDetails user) {
+        log.info("{}{}", user.getUserId(), user.getEmail());
         AccountDto accountDto = accountService.getAccountById(user.getUserId());
+        boolean isNotNullCheck = accountDto == null;
+        log.info(Boolean.toString(isNotNullCheck));
         return ResponseEntity.ok(accountDto);
     }
 
