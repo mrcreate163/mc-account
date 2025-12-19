@@ -14,18 +14,20 @@ public class AuthClient {
     private static final String USER_URI = "/user";
 
     private final RestClient restClient;
+    private final String authUrl;
 
     public AuthClient(
             @Value("${client.auth}") String authUrl,
             RestClient.Builder restClient
     ) {
+        this.authUrl = authUrl;
         this.restClient = restClient.baseUrl(authUrl).build();
     }
 
     public Boolean checkValidateToken(String token) {
         try {
             String validateUrl = VALIDATE_URI + token;
-            log.info(validateUrl);
+            log.info("{}{}", authUrl, validateUrl);
             return restClient.get()
                     .uri(validateUrl)
                     .headers(it -> it.setBearerAuth(token))
