@@ -33,7 +33,7 @@ spring:
     group-id: "dsf"
 
 client:
-  auth: "http://89.111.153.92:8081"
+  auth: "http://MC-AUTH:8081"
 
 eureka:
   client:
