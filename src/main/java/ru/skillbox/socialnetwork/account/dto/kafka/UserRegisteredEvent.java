@@ -1,5 +1,6 @@
 package ru.skillbox.socialnetwork.account.dto.kafka;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +14,16 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRegisteredEvent {
+
     private UUID userId;
+
     private String email;
+
+    @JsonProperty("firstname")
     private String firstName;
+
+    @JsonProperty("lastname")
     private String lastName;
+
     private LocalDateTime registeredAt;
 }
