@@ -19,10 +19,8 @@ public class UserRegisteredEvent {
 
     private String email;
 
-    @JsonProperty("firstname")
     private String firstName;
 
-    @JsonProperty("lastname")
     private String lastName;
 
     private LocalDateTime registeredAt;
