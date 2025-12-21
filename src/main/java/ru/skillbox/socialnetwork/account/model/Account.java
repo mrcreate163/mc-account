@@ -34,16 +34,16 @@ public class Account {
     private LocalDateTime registeredAt;
 
     @Column(name = "is_blocked")
-    private Boolean isBlocked;
+    private Boolean isBlocked = false;
 
     @Column(name = "is_deleted")
-    private Boolean isDeleted;
+    private Boolean isDeleted = false;
 
     @Column(name = "last_online_time")
     private LocalDateTime lastOnlineTime;
 
     @Column(name = "is_online")
-    private Boolean isOnline;
+    private Boolean isOnline = true;
 
     @Column(name = "created_on")
     private LocalDateTime createdOn;

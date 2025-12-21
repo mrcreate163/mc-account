@@ -41,11 +41,15 @@
         <dropColumn tableName="account" columnName="emoji_status"/>
     </changeSet>
 
-    <changeSet id="1766327424604-1" author="aleksei">
+    <changeSet id="1766327424604-1" author="Aleksei">
         <dropColumn tableName="account" columnName="phone"/>
         <addDefaultValue tableName="account" columnName="is_deleted" defaultValueBoolean="false"/>
         <addDefaultValue tableName="account" columnName="is_blocked" defaultValueBoolean="false"/>
         <addDefaultValue tableName="account" columnName="is_online" defaultValueBoolean="false"/>
+    </changeSet>
+
+    <changeSet id="1766331211538-1" author="Aleksei">
+        <addDefaultValue tableName="account" columnName="is_online" defaultValueBoolean="true"/>
     </changeSet>
 
 </databaseChangeLog>
