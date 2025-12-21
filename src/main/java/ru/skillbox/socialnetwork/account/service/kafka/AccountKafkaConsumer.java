@@ -19,7 +19,11 @@ public class AccountKafkaConsumer {
      * Создает аккаунт по ивенту REGISTER_TOP, который инициирует auth-сервис в эндпоинте /register
      * @param record - параметр хранящий тело ивента
      */
-    @KafkaListener(topics = "REGISTER_TOP", groupId = "account_service")
+    @KafkaListener(
+            topics = "REGISTER_TOP",
+            groupId = "account_service",
+            containerFactory = "userRegisteredKafkaListenerContainerFactory"
+    )
     public void consumeAccountCreate(ConsumerRecord<String, UserRegisteredEvent> record) {
         UserRegisteredEvent event = record.value();
 
