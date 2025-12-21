@@ -42,22 +42,22 @@ public class AccountServiceTest {
                 UUID.fromString("b3356558-70bc-42a9-ad9d-c6720e10afe8"),
                 UUID.fromString("4952330c-409b-4541-a516-1a71ff1f76ba")
         );
-        accounts = List.of(
-                new Account(UUID.fromString("d8197e9c-e7b5-4b99-8dd7-10dda802f256"), "sdf",
-                        "fsd", "fsd", "dsf", "gsdf", "afsd",
-                        "dgfas", "sfd", LocalDateTime.now(), LocalDate.now(),
-                        LocalDateTime.now(), false, false, false, "sfads",
-                        LocalDateTime.now(), LocalDateTime.now(), "fds"
-                )
-        );
-        accountsDTO = List.of(
-                new AccountDto(UUID.fromString("d8197e9c-e7b5-4b99-8dd7-10dda802f256"), "sdf",
-                        "fsd", "fsd", "dsf", "gsdf", "afsd",
-                        "dgfas", "sfd", LocalDateTime.now(), LocalDate.now(),
-                        LocalDateTime.now(), false, false, false, "sfads",
-                        LocalDateTime.now(), LocalDateTime.now(), "fds"
-                )
-        );
+//        accounts = List.of(
+//                new Account(UUID.fromString("d8197e9c-e7b5-4b99-8dd7-10dda802f256"), "sdf",
+//                        "fsd", "fsd", "dsf", "gsdf", "afsd",
+//                        "dgfas", "sfd", LocalDateTime.now(), LocalDate.now(),
+//                        LocalDateTime.now(), false, false, false, "sfads",
+//                        LocalDateTime.now(), LocalDateTime.now(), "fds"
+//                )
+//        );
+//        accountsDTO = List.of(
+//                new AccountDto(UUID.fromString("d8197e9c-e7b5-4b99-8dd7-10dda802f256"), "sdf",
+//                        "fsd", "fsd", "dsf", "gsdf", "afsd",
+//                        "dgfas", "sfd", LocalDateTime.now(), LocalDate.now(),
+//                        LocalDateTime.now(), false, false, false, "sfads",
+//                        LocalDateTime.now(), LocalDateTime.now(), "fds"
+//                )
+//        );
     }
 
     @Test

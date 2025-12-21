@@ -1,6 +1,8 @@
 package ru.skillbox.socialnetwork.account.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import ru.skillbox.socialnetwork.account.dto.kafka.UserRegisteredEvent;
 import ru.skillbox.socialnetwork.account.dto.request.CreatedAccountRequest;
 import ru.skillbox.socialnetwork.account.dto.response.AccountDto;
 import ru.skillbox.socialnetwork.account.model.Account;
@@ -9,8 +11,24 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
+
     Account toEntity(AccountDto dto);
+
     Account toEntity(CreatedAccountRequest dto);
+
+    @Mapping(target = "phone", source = "accountInfo.phone")
+    @Mapping(target = "photo", source = "accountInfo.photo")
+    @Mapping(target = "about", source = "accountInfo.about")
+    @Mapping(target = "city", source = "accountInfo.city")
+    @Mapping(target = "country", source = "accountInfo.country")
+    @Mapping(target = "birthDate", source = "accountInfo.birthDate")
+    @Mapping(target = "photoName", source = "accountInfo.photoName")
+    @Mapping(target = "emojiStatus", source = "accountInfo.emojiStatus")
     AccountDto toDto(Account account);
+
     List<AccountDto> toDto(List<Account> accounts);
+
+    @Mapping(target = "id", source = "userId")
+    Account toEntity(UserRegisteredEvent event);
+
 }

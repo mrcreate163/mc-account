@@ -11,7 +11,7 @@ spring:
     active: PROD
 
   datasource:
-    url: jdbc:postgresql://89.111.153.92:5432/account
+    url: jdbc:postgresql://social-network-postgres:5432/account
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -29,16 +29,15 @@ spring:
     change-log: classpath:/db.changelog/db.changelog-master.xml
 
   kafka:
-    bootstrap-server: "89.111.153.92:9092"
-    group-id: "dsf"
+    bootstrap-server: "social-network-kafka:9092"
 
 client:
-  auth: "http://MC-AUTH:8081"
+  auth: "http://mc-auth:8081"
 
 eureka:
   client:
     service-url:
-      defaultZone: http://89.111.153.92:8761/eureka/
+      defaultZone: http://eureka-server:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
   instance:

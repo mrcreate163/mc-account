@@ -30,4 +30,15 @@
             <column name="emoji_status" type="varchar(256)"/>
         </createTable>
     </changeSet>
+
+    <changeSet id="1766321756797-1" author="Aleksei">
+        <dropColumn tableName="account" columnName="photo"/>
+        <dropColumn tableName="account" columnName="about"/>
+        <dropColumn tableName="account" columnName="city"/>
+        <dropColumn tableName="account" columnName="country"/>
+        <dropColumn tableName="account" columnName="bd"/>
+        <dropColumn tableName="account" columnName="photo_name"/>
+        <dropColumn tableName="account" columnName="emoji_status"/>
+    </changeSet>
+
 </databaseChangeLog>

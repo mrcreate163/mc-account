@@ -30,10 +30,7 @@ public class AccountController {
 
     @GetMapping("/me")
     public ResponseEntity<AccountDto> getCurrentAccount(@AuthenticationPrincipal UserDataDetails user) {
-        log.info("{}{}", user.getUserId(), user.getEmail());
         AccountDto accountDto = accountService.getAccountById(user.getUserId());
-        boolean isNotNullCheck = accountDto == null;
-        log.info(Boolean.toString(isNotNullCheck));
         return ResponseEntity.ok(accountDto);
     }
 

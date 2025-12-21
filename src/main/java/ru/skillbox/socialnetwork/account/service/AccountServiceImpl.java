@@ -8,11 +8,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.skillbox.socialnetwork.account.client.auth.UserDataDetails;
+import ru.skillbox.socialnetwork.account.dto.kafka.UserRegisteredEvent;
 import ru.skillbox.socialnetwork.account.dto.request.AccountByFilterDto;
 import ru.skillbox.socialnetwork.account.dto.request.AccountSearchDto;
 import ru.skillbox.socialnetwork.account.dto.request.CreatedAccountRequest;
 import ru.skillbox.socialnetwork.account.dto.response.AccountDto;
-import ru.skillbox.socialnetwork.account.exception.AccountNotFoundException;
+import ru.skillbox.socialnetwork.account.exception.AccountException;
+import ru.skillbox.socialnetwork.account.exception.GeneralException;
 import ru.skillbox.socialnetwork.account.mapper.AccountMapper;
 import ru.skillbox.socialnetwork.account.model.Account;
 import ru.skillbox.socialnetwork.account.repository.AccountRepository;
@@ -37,10 +39,11 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public String deleteAccount(UUID userId) {
-        Account account = accountRepository.findById(userId).orElse(null);
+        Account account = accountRepository.findById(userId)
+                .orElse(null);
 
         if (account == null)
-            throw new AccountNotFoundException("Аккаунт с таким id не найден!");
+            throw new AccountException("Аккаунт с таким id не найден!");
 
         account.setIsDeleted(true);
         accountRepository.save(account);
@@ -53,7 +56,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(id).orElse(null);
 
         if (account == null)
-            throw new AccountNotFoundException("Аккаунт с таким id не найден!");
+            throw new AccountException("Аккаунт с таким id не найден!");
 
         account.setIsBlocked(true);
         accountRepository.save(account);
@@ -66,7 +69,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(id).orElse(null);
 
         if (account == null)
-            throw new AccountNotFoundException("Аккаунт с таким id не найден!");
+            throw new AccountException("Аккаунт с таким id не найден!");
 
         account.setIsBlocked(false);
         accountRepository.save(account);
@@ -88,7 +91,7 @@ public class AccountServiceImpl implements AccountService {
         account.setEmail(user.getEmail());
 
         if (accountRepository.existsById(user.getUserId()))
-            throw new AccountNotFoundException("Аккаунт не найден!");
+            throw new AccountException("Аккаунт не найден!");
 
         accountRepository.save(account);
         return accountMapper.toDto(account);
@@ -110,10 +113,11 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDto getAccountById(UUID id) {
-        Account account = accountRepository.findById(id).orElse(null);
+        Account account = accountRepository.findById(id)
+                .orElse(null);
 
         if (account == null)
-            throw new AccountNotFoundException("Аккаунт с таким id не найден!");
+            throw new AccountException("Аккаунт с таким id не найден!");
 
         return accountMapper.toDto(account);
     }
@@ -131,4 +135,15 @@ public class AccountServiceImpl implements AccountService {
                 .map(accountMapper::toDto);
     }
 
+    @Override
+    @Transactional
+    public void createAccountAnEvent(UserRegisteredEvent event) {
+        if (event == null)
+            throw new GeneralException("При регистрации пользователя произошла ошибка!");
+
+        if (accountRepository.existsById(event.getUserId()))
+            throw new AccountException("Аккаунт уже существует!");
+
+        accountRepository.save(accountMapper.toEntity(event));
+    }
 }
