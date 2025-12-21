@@ -144,7 +144,6 @@ public class AccountServiceImpl implements AccountService {
         if (accountRepository.existsById(event.getUserId()))
             throw new AccountException("Аккаунт уже существует!");
 
-
         accountRepository.save(accountMapper.toEntity(event));
     }
 }

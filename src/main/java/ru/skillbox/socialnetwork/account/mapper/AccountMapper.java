@@ -32,6 +32,9 @@ public interface AccountMapper {
     @Mapping(target = "createdOn", source = "registeredAt")
     @Mapping(target = "updatedOn", source = "registeredAt")
     @Mapping(target = "lastOnlineTime", source = "registeredAt")
+    @Mapping(target = "isOnline", ignore = true)
+    @Mapping(target = "isBlocked", ignore = true)
+    @Mapping(target = "isDeleted", ignore = true)
     Account toEntity(UserRegisteredEvent event);
 
 }
