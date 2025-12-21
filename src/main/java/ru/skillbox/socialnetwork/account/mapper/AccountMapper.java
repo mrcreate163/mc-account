@@ -29,6 +29,9 @@ public interface AccountMapper {
     List<AccountDto> toDto(List<Account> accounts);
 
     @Mapping(target = "id", source = "userId")
+    @Mapping(target = "createdOn", source = "registeredAt")
+    @Mapping(target = "updatedOn", source = "registeredAt")
+    @Mapping(target = "lastOnlineTime", source = "registeredAt")
     Account toEntity(UserRegisteredEvent event);
 
 }
