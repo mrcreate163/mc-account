@@ -8,7 +8,6 @@ import ru.skillbox.socialnetwork.account.dto.request.CreatedAccountRequest;
 import ru.skillbox.socialnetwork.account.dto.response.AccountDto;
 import ru.skillbox.socialnetwork.account.dto.request.AccountByFilterDto;
 import ru.skillbox.socialnetwork.account.dto.request.AccountSearchDto;
-import ru.skillbox.socialnetwork.account.model.Account;
 
 import java.util.List;
 import java.util.UUID;
@@ -33,9 +32,9 @@ public interface AccountService {
 
     Page<AccountDto> getAllAccounts(Pageable pageable);
 
-    boolean blockedAccountById(UUID id);
+    void blockedAccountById(UUID id);
 
-    boolean unblockAccount(UUID id);
+    void unblockedAccountById(UUID id);
 
     void createAccountAnEvent(UserRegisteredEvent event);
 
