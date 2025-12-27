@@ -51,22 +51,14 @@ public class AccountController {
      */
     @PutMapping("/block/{id}")
     public ResponseEntity<?> blockAccountById(@PathVariable UUID id) {
-        boolean isBlocked = accountService.blockedAccountById(id);
-
-        if (isBlocked)
-            return new ResponseEntity<>("Аккаунт успешно заблокирован", HttpStatus.OK);
-        else
-            return new ResponseEntity<>("Аккаунт не был заблокирован", HttpStatus.NOT_FOUND);
+        accountService.blockedAccountById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/block/{id}")
     public ResponseEntity<?> unblockAccountById(@PathVariable UUID id) {
-        boolean isUnblockAccount = accountService.unblockAccount(id);
-
-        if (isUnblockAccount)
-            return new ResponseEntity<>("Аккаунт успешно разблокирован", HttpStatus.OK);
-        else
-            return new ResponseEntity<>("Аккаунт не был разблокирован", HttpStatus.NOT_FOUND);
+        accountService.unblockedAccountById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping

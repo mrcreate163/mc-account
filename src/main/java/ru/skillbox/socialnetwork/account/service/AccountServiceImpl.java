@@ -2,6 +2,7 @@ package ru.skillbox.socialnetwork.account.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ import ru.skillbox.socialnetwork.account.repository.AccountSpecification;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
@@ -52,29 +54,37 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean blockedAccountById(UUID id) {
-        Account account = accountRepository.findById(id).orElse(null);
+    public void blockedAccountById(UUID id) {
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Аккаунт с таким id={} не найден!", id);
+                    return new AccountException("Аккаунт не найден!");
+                });
 
-        if (account == null)
-            throw new AccountException("Аккаунт с таким id не найден!");
+        if (account.getIsBlocked()) {
+            log.info("Аккаунт с id={} уже заблокирован", id);
+            throw new AccountException("Аккаунт уже заблокирован!");
+        }
 
         account.setIsBlocked(true);
         accountRepository.save(account);
-
-        return true;
     }
 
     @Override
-    public boolean unblockAccount(UUID id) {
-        Account account = accountRepository.findById(id).orElse(null);
+    public void unblockedAccountById(UUID id) {
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Аккаунт с таким id={} не найден!", id);
+                    return new AccountException("Аккаунт не найден!");
+                });
 
-        if (account == null)
-            throw new AccountException("Аккаунт с таким id не найден!");
+        if (account.getIsBlocked()) {
+            log.info("Аккаунт с id={} не заблокирован", id);
+            throw new AccountException("Аккаунт не заблокирован!");
+        }
 
-        account.setIsBlocked(false);
+        account.setIsBlocked(true);
         accountRepository.save(account);
-
-        return true;
     }
 
     @Override

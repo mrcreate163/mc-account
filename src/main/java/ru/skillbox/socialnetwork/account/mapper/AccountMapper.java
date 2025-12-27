@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import ru.skillbox.socialnetwork.account.dto.kafka.UserRegisteredEvent;
 import ru.skillbox.socialnetwork.account.dto.request.CreatedAccountRequest;
 import ru.skillbox.socialnetwork.account.dto.response.AccountDto;
+import ru.skillbox.socialnetwork.account.dto.telegram.response.AccountTelegramResponse;
 import ru.skillbox.socialnetwork.account.model.Account;
 
 import java.util.List;
@@ -36,5 +37,10 @@ public interface AccountMapper {
     @Mapping(target = "isBlocked", ignore = true)
     @Mapping(target = "isDeleted", ignore = true)
     Account toEntity(UserRegisteredEvent event);
+
+    @Mapping(target = "regDate", source = "registeredAt")
+    AccountTelegramResponse toTelegramDto(Account account);
+
+    List<AccountTelegramResponse> toTelegramDto(List<Account> accounts);
 
 }
