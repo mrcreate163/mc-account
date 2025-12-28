@@ -108,6 +108,7 @@ prod-deploy:
           --network social-network-net \
           -p 34135:34135 \
           -e SPRING_PROFILES_ACTIVE=prod \
+          -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
           $DEPLOY_IMAGE
       
         echo "🧹 Cleanup old images..."
