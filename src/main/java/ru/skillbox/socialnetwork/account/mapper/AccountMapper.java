@@ -39,6 +39,15 @@ public interface AccountMapper {
     Account toEntity(UserRegisteredEvent event);
 
     @Mapping(target = "regDate", source = "registeredAt")
+    @Mapping(target = "phone", source = "accountInfo.phone")
+    @Mapping(target = "photo", source = "accountInfo.photo")
+    @Mapping(target = "about", source = "accountInfo.about")
+    @Mapping(target = "city", source = "accountInfo.city")
+    @Mapping(target = "country", source = "accountInfo.country")
+    @Mapping(target = "birthDate", source = "accountInfo.birthDate")
+    @Mapping(target = "blocked", source = "isBlocked")
+    @Mapping(target = "online", source = "isOnline")
+    @Mapping(target = "deleted", source = "isDeleted")
     AccountTelegramResponse toTelegramDto(Account account);
 
     List<AccountTelegramResponse> toTelegramDto(List<Account> accounts);
