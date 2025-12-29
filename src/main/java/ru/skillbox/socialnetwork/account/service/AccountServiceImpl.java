@@ -78,12 +78,12 @@ public class AccountServiceImpl implements AccountService {
                     return new AccountException("Аккаунт не найден!");
                 });
 
-        if (account.getIsBlocked()) {
+        if (!account.getIsBlocked()) {
             log.info("Аккаунт с id={} не заблокирован", id);
             throw new AccountException("Аккаунт не заблокирован!");
         }
 
-        account.setIsBlocked(true);
+        account.setIsBlocked(false);
         accountRepository.save(account);
     }
 
