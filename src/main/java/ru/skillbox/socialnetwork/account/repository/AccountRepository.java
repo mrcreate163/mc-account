@@ -13,4 +13,5 @@ import java.util.UUID;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, UUID>, JpaSpecificationExecutor<Account> {
     Page<Account> findAllByIdIn(List<UUID> ids, Pageable pageable);
+    Page<Account> findByEmailContainingIgnoreCase(String email, Pageable pageable);
 }

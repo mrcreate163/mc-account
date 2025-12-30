@@ -45,4 +45,23 @@ public class TelegramController {
         accountService.unblockedAccountById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/account/search")
+    public ResponseEntity<PageAccountDto> searchAccountsByEmail(
+            @RequestParam String email,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "regDate,desc") String sort
+    ) {
+        String[] sortParams = sort.split(",");
+        String sortField = sortParams[0];
+        if ("regDate".equals(sortField)) {
+            sortField = "registeredAt";
+        }
+        Sort.Direction sortDirection = sortParams.length > 1 && sortParams[1].equalsIgnoreCase("asc") 
+                ? Sort.Direction.ASC 
+                : Sort.Direction.DESC;
+        Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size, Sort.by(sortDirection, sortField));
+        return ResponseEntity.ok(telegramService.searchAccountsByEmail(email, pageable));
+    }
 }

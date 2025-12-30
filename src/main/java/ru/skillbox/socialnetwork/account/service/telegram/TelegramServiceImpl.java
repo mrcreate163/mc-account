@@ -42,7 +42,26 @@ public class TelegramServiceImpl implements TelegramService {
                 accountPage.getTotalPages(),
                 accountPage.getSize(),
                 accountMapper.toTelegramDto(accountPage.getContent()),
-                accountPage.getNumber()
+                accountPage.getNumber(),
+                accountPage.isFirst(),
+                accountPage.isLast(),
+                accountPage.isEmpty()
+        );
+    }
+
+    @Override
+    public PageAccountDto searchAccountsByEmail(String email, Pageable pageable) {
+        Page<Account> accountPage = accountRepository.findByEmailContainingIgnoreCase(email, pageable);
+
+        return new PageAccountDto(
+                accountPage.getTotalElements(),
+                accountPage.getTotalPages(),
+                accountPage.getSize(),
+                accountMapper.toTelegramDto(accountPage.getContent()),
+                accountPage.getNumber(),
+                accountPage.isFirst(),
+                accountPage.isLast(),
+                accountPage.isEmpty()
         );
     }
 }
