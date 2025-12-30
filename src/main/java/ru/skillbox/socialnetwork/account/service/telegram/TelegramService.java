@@ -12,4 +12,6 @@ public interface TelegramService {
 
     PageAccountDto getAccounts(Pageable pageable);
 
+    PageAccountDto searchAccountsByEmail(String email, Pageable pageable);
+
 }

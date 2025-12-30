@@ -18,5 +18,8 @@ public class PageAccountDto {
     private Integer size;
     private List<AccountTelegramResponse> content;
     private Integer number;
+    private Boolean first;
+    private Boolean last;
+    private Boolean empty;
 
 }
